@@ -42,10 +42,10 @@ type KeycloakSpec struct {
 }
 
 type KeycloakRealm struct {
-	Name      string         `json:"name"`
-	AuthTypes []AuthTypes    `json:"authMethods"`
-	Users     []KeycloakUser `json:"users"`
-	Clients   []Client       `json:"clients"`
+	Name      string             `json:"name"`
+	AuthTypes []AuthTypes        `json:"authMethods"`
+	Users     []KeycloakUser     `json:"users"`
+	Clients   map[string]*Client `json:"clients"`
 }
 
 type AuthTypes struct {
@@ -96,7 +96,7 @@ var (
 	PhaseCredentialsCreated StatusPhase = "credentialsCreated"
 )
 
-type KeycloakToken struct {
+type TokenResponse struct {
 	AccessToken      string `json:"access_token"`
 	ExpiresIn        int    `json:"expires_in"`
 	RefreshExpiresIn int    `json:"refresh_expires_in"`
@@ -104,6 +104,8 @@ type KeycloakToken struct {
 	TokenType        string `json:"token_type"`
 	NotBeforePolicy  int    `json:"not-before-policy"`
 	SessionState     string `json:"session_state"`
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
 }
 
 type Attributes struct {
@@ -144,7 +146,7 @@ type Client struct {
 	ClientAuthenticatorType   string           `json:"clientAuthenticatorType"`
 	DefaultRoles              []string         `json:"defaultRoles,omitempty"`
 	RedirectUris              []string         `json:"redirectUris"`
-	WebOrigins                []interface{}    `json:"webOrigins"`
+	WebOrigins                []string         `json:"webOrigins"`
 	NotBefore                 int              `json:"notBefore"`
 	BearerOnly                bool             `json:"bearerOnly"`
 	ConsentRequired           bool             `json:"consentRequired"`
@@ -166,6 +168,6 @@ type Client struct {
 }
 
 type ClientPair struct {
-	KcClient  Client
-	ObjClient Client
+	KcClient  *Client
+	ObjClient *Client
 }
